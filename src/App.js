@@ -1,11 +1,14 @@
 // import SimpleInput from "./components/SimpleInput";
 import BasicForm from "./components/BasicForm";
 
-function App() {
+function App(props) {
+  function dataReceive(data) {
+    // console.log(data);
+  }
   return (
     <div className="app">
       {/* <SimpleInput /> */}
-      <BasicForm />
+      <BasicForm receiveFormData={dataReceive} />
     </div>
   );
 }
