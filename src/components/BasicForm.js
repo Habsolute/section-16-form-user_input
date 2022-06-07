@@ -6,26 +6,30 @@ const BasicForm = (props) => {
   const [firstName, setFirstName] = useState("");
   const [fistNameTouched, setFistNameTouched] = useState(false);
   const firstNameIsValid = firstName.trim() !== "";
+  const nameInputError = fistNameTouched && !firstNameIsValid;
 
   //  Last name
   const [lastName, setLastName] = useState("");
   const [lastNameTouched, setLastNameTouched] = useState(false);
   const lastNameIsValid = lastName.trim() !== "";
+  const lastNameInputError = lastNameTouched && !lastNameIsValid;
 
   //  email
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
   const emailIsValid = email.trim().includes("@");
+  const emailInputError = emailTouched && !emailIsValid;
 
   const formIsValid = emailIsValid && lastNameIsValid && firstNameIsValid;
 
   useInput("hello");
-  console.log("formulaire valide : " + formIsValid);
+  // console.log("formulaire valide : " + formIsValid);
   /**
    *  First Name receive from form ---------------------
    */
   function fisrtNameInputHandler(e) {
     setFirstName(e.target.value);
+    setFistNameTouched(false);
   }
 
   function firstNameBlur(e) {
@@ -37,6 +41,7 @@ const BasicForm = (props) => {
    */
   function lastNameInputHandler(e) {
     setLastName(e.target.value);
+    setLastNameTouched(false);
   }
 
   function lastNameBlur() {
@@ -48,6 +53,7 @@ const BasicForm = (props) => {
    */
   function emailInputHandler(e) {
     setEmail(e.target.value);
+    setEmailTouched(false);
   }
 
   function emailBlur() {
@@ -72,10 +78,25 @@ const BasicForm = (props) => {
     setEmail("");
   }
 
+  let inputNameClasses = "";
+  if (nameInputError) {
+    inputNameClasses = "form-control  invalid";
+  } else {
+    inputNameClasses = "form-control";
+  }
+
+  const lastNameInputClasses = lastNameInputError
+    ? "form-control  invalid"
+    : "form-control";
+
+  const emailInputClasses = emailInputError
+    ? "form-control  invalid"
+    : "form-control";
+
   return (
     <form onSubmit={formSubmitHandler}>
       <div className="control-group">
-        <div className="form-control">
+        <div className={inputNameClasses}>
           <label htmlFor="fisrtName">First Name</label>
           <input
             onBlur={firstNameBlur}
@@ -86,8 +107,11 @@ const BasicForm = (props) => {
             id="name"
           />
         </div>
-        {}
-        <div className="form-control">
+        {nameInputError && (
+          <p className="error-text">Must be a valid first name.</p>
+        )}
+
+        <div className={lastNameInputClasses}>
           <label htmlFor="lastName">Last Name</label>
           <input
             onBlur={lastNameBlur}
@@ -98,8 +122,11 @@ const BasicForm = (props) => {
             id="name"
           />
         </div>
+        {lastNameInputError && (
+          <p className="error-text">Must be a valid last name.</p>
+        )}
       </div>
-      <div className="form-control">
+      <div className={emailInputClasses}>
         <label htmlFor="email">E-Mail Address</label>
         <input
           onBlur={emailBlur}
@@ -110,8 +137,9 @@ const BasicForm = (props) => {
           onChange={emailInputHandler}
         />
       </div>
+      {emailInputError && <p className="error-text">Must be a valid Email.</p>}
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
